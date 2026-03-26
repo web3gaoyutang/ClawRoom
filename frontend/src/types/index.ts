@@ -16,7 +16,7 @@ export interface CharacterData {
   colorPrimary: string;
   colorSecondary: string;
   hairStyle: number;
-  accessory: number; // 0=none,1=backpack,2=laptop,3=phone,4=coffee,5=headphones,6=cap
+  accessory: number | null;
 }
 
 export interface Position {
@@ -24,15 +24,7 @@ export interface Position {
   y: number;
 }
 
-export type CharacterState =
-  | 'entering'
-  | 'walking'
-  | 'idle'
-  | 'sitting'
-  | 'waving'
-  | 'typing'    // looking at phone / laptop
-  | 'drinking'
-  | 'looking';  // looking around
+export type CharacterState = 'entering' | 'walking' | 'idle';
 
 export interface GameCharacter {
   data: CharacterData;
@@ -41,10 +33,8 @@ export interface GameCharacter {
   state: CharacterState;
   direction: 'left' | 'right';
   idleTimer: number;
-  nameVisible: number;
+  nameVisible: number; // remaining ms to show name
   highlightTimer: number;
   animFrame: number;
   animTimer: number;
-  actionTimer: number;   // time spent in current action
-  bobOffset: number;     // vertical bobbing for idle breathing
 }
