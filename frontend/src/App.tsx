@@ -1,37 +1,13 @@
-import { useRef, useState, useCallback } from 'react';
-import Header from './components/Header';
-import Footer from './components/Footer';
-import InfoPanel from './components/InfoPanel';
-import PixelRoom from './components/PixelRoom';
-import { CharacterManager } from './game/CharacterManager';
-import { useMockCheckin } from './hooks/useMockCheckin';
-import type { CharacterData } from './types';
-
-const EVENT_NAME = 'OpenClaw Meetup 2026';
+import { useState } from 'react';
 
 export default function App() {
-  const managerRef = useRef(new CharacterManager());
-  const [totalCount, setTotalCount] = useState(0);
-  const [recentNames, setRecentNames] = useState<string[]>([]);
-  const [latestName, setLatestName] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
 
-  const handleCheckin = useCallback((character: CharacterData) => {
-    managerRef.current.addCharacter(character);
-    setRecentNames(prev => [...prev, character.nickname]);
-    setLatestName(character.nickname);
-  }, []);
-
-  // Mock check-ins for demo
-  useMockCheckin({
-    onCheckin: handleCheckin,
-    intervalMin: 3000,
-    intervalMax: 8000,
-    initialBurst: 10,
-  });
-
-  const handleCountChange = useCallback((count: number) => {
-    setTotalCount(count);
-  }, []);
+  const handleCopy = () => {
+    navigator.clipboard.writeText('clawhub install weixiahub');
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   return (
     <div style={{
@@ -39,45 +15,94 @@ export default function App() {
       height: '100vh',
       display: 'flex',
       flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
       background: '#06060f',
+      color: '#FFFFFF',
+      fontFamily: '"Press Start 2P", monospace',
       overflow: 'hidden',
     }}>
-      <Header eventName={EVENT_NAME} />
-
+      {/* Logo */}
       <div style={{
-        flex: 1,
+        width: 64,
+        height: 64,
+        background: 'linear-gradient(135deg, #4ECDC4, #45B7D1)',
+        borderRadius: 12,
         display: 'flex',
-        overflow: 'hidden',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontSize: 28,
+        color: '#0a0a1a',
+        fontWeight: 'bold',
+        boxShadow: '0 0 24px rgba(78, 205, 196, 0.5)',
+        marginBottom: 32,
       }}>
-        {/* Main pixel room */}
-        <div style={{ flex: 1, position: 'relative' }}>
-          <PixelRoom
-            managerRef={managerRef}
-            onCountChange={handleCountChange}
-          />
-
-          {/* Vignette overlay */}
-          <div style={{
-            position: 'absolute',
-            inset: 0,
-            pointerEvents: 'none',
-            background: 'radial-gradient(ellipse at center, transparent 50%, rgba(6,6,15,0.6) 100%)',
-          }} />
-
-          {/* Scanline effect */}
-          <div style={{
-            position: 'absolute',
-            inset: 0,
-            pointerEvents: 'none',
-            background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px)',
-          }} />
-        </div>
-
-        {/* Info panel */}
-        <InfoPanel totalCount={totalCount} recentNames={recentNames} />
+        C
       </div>
 
-      <Footer latestName={latestName} />
+      {/* Title */}
+      <h1 style={{
+        fontSize: 28,
+        margin: '0 0 16px 0',
+        color: '#4ECDC4',
+        textShadow: '0 0 12px rgba(78, 205, 196, 0.4)',
+        letterSpacing: 4,
+      }}>
+        ClawRoom
+      </h1>
+
+      <p style={{
+        fontSize: 14,
+        color: '#8888aa',
+        margin: '0 0 48px 0',
+        fontFamily: 'monospace',
+        letterSpacing: 1,
+      }}>
+        Pixel check-in display for offline events
+      </p>
+
+      {/* Install command */}
+      <div
+        onClick={handleCopy}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 16,
+          background: 'rgba(78, 205, 196, 0.08)',
+          border: '2px solid #4ECDC4',
+          borderRadius: 12,
+          padding: '20px 32px',
+          cursor: 'pointer',
+          transition: 'all 0.2s',
+          boxShadow: '0 0 20px rgba(78, 205, 196, 0.15)',
+        }}
+      >
+        <span style={{
+          color: '#4ECDC4',
+          fontSize: 14,
+          fontFamily: '"Press Start 2P", monospace',
+        }}>
+          $
+        </span>
+        <code style={{
+          fontSize: 18,
+          color: '#FFFFFF',
+          fontFamily: '"Fira Code", "Cascadia Code", monospace',
+          letterSpacing: 1,
+        }}>
+          clawhub install weixiahub
+        </code>
+        <span style={{
+          fontSize: 12,
+          color: copied ? '#4ECDC4' : '#666',
+          fontFamily: 'monospace',
+          marginLeft: 8,
+          minWidth: 60,
+          textAlign: 'center',
+        }}>
+          {copied ? 'Copied!' : 'Click to copy'}
+        </span>
+      </div>
     </div>
   );
 }
